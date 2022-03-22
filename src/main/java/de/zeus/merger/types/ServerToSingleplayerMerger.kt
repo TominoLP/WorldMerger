@@ -1,104 +1,84 @@
-package de.zeus.merger.types;
+package de.zeus.merger.types
 
-import de.zeus.merger.Merger;
-import de.zeus.merger.Utils;
-import org.apache.commons.io.FileUtils;
+import de.zeus.merger.Merger
+import de.zeus.merger.Utils
+import de.zeus.merger.Utils.Companion.error
+import java.io.File
+import org.apache.commons.io.FileUtils
+import java.io.IOException
+import java.util.Arrays
+import java.util.Objects
+import java.util.stream.Collectors
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-public class ServerToSingleplayerMerger extends Utils implements Merger {
-
-    private final String[] worldNames = new String[]{"world", "world_nether", "world_the_end"};
-
-    @Override
-    public boolean mergeWorld(File dropFolder, File finalWorld, String worldName) {
+class ServerToSingleplayerMerger : Utils(), Merger {
+    private val worldNames = arrayOf("world", "world_nether", "world_the_end")
+    override fun mergeWorld(dropFolder: File, finalWorld: File, worldName: String): Boolean {
         if (finalWorld.exists()) {
-            error("A error occurred! Folder " + worldName + " already exists", false);
-            return false;
+            error("A error occurred! Folder $worldName already exists", false)
+            return false
         }
-
         if (!finalWorld.mkdir()) {
-            error("A error occurred! Can not creating folder " + worldName);
-            return false;
+            error("A error occurred! Can not creating folder $worldName")
+            return false
         }
-
-        File worldFile = new File(dropFolder + "/world/");
-
+        val worldFile = File("$dropFolder/world/")
         try {
-            FileUtils.copyDirectory(worldFile, finalWorld);
-        } catch (IOException e) {
-            error("A error occurred! Can not copy default world to " + worldName);
-            e.printStackTrace();
-            return false;
+            FileUtils.copyDirectory(worldFile, finalWorld)
+        } catch (e: IOException) {
+            error("A error occurred! Can not copy default world to $worldName")
+            e.printStackTrace()
+            return false
         }
-
-        File netherFile = new File(dropFolder + "/world_nether/DIM-1/");
-        File dim1File = new File(finalWorld + "/DIM-1/");
-
+        val netherFile = File("$dropFolder/world_nether/DIM-1/")
+        val dim1File = File("$finalWorld/DIM-1/")
         try {
             if (dim1File.exists()) {
-                FileUtils.deleteDirectory(dim1File);
+                FileUtils.deleteDirectory(dim1File)
             }
-        } catch (IOException e) {
-            error("A error occurred! Can not delete folder " + dim1File.getName());
-            e.printStackTrace();
-            return false;
+        } catch (e: IOException) {
+            error("A error occurred! Can not delete folder " + dim1File.name)
+            e.printStackTrace()
+            return false
         }
-
         if (!dim1File.mkdir()) {
-            error("A error occurred! Can not create folder " + dim1File.getName());
-            return false;
-        } else
-            System.out.println("Created folder " + dim1File.getName());
-
+            error("A error occurred! Can not create folder " + dim1File.name)
+            return false
+        } else println("Created folder " + dim1File.name)
         try {
-            FileUtils.copyDirectory(netherFile, dim1File);
-        } catch (IOException e) {
-            error("A error occurred! Can not copy folder " + netherFile.getName() + " to " + dim1File.getName());
-            e.printStackTrace();
-            return false;
+            FileUtils.copyDirectory(netherFile, dim1File)
+        } catch (e: IOException) {
+            error("A error occurred! Can not copy folder " + netherFile.name + " to " + dim1File.name)
+            e.printStackTrace()
+            return false
         }
-
-        File endFile = new File(dropFolder + "/world_the_end/DIM1/");
-        File dim2File = new File(finalWorld + "/DIM1/");
-
+        val endFile = File("$dropFolder/world_the_end/DIM1/")
+        val dim2File = File("$finalWorld/DIM1/")
         try {
             if (dim2File.exists()) {
-                FileUtils.deleteDirectory(dim2File);
+                FileUtils.deleteDirectory(dim2File)
             }
-        } catch (IOException e) {
-            error("A error occurred! Can not delete folder " + dim2File.getName());
-            e.printStackTrace();
-            return false;
+        } catch (e: IOException) {
+            error("A error occurred! Can not delete folder " + dim2File.name)
+            e.printStackTrace()
+            return false
         }
-
         if (!dim2File.mkdir()) {
-            error("A error occurred! Can not create folder " + dim2File.getName());
-            return false;
+            error("A error occurred! Can not create folder " + dim2File.name)
+            return false
         }
-        System.out.println("Created folder " + dim2File.getName());
-
+        println("Created folder " + dim2File.name)
         try {
-            FileUtils.copyDirectory(endFile, dim2File);
-        } catch (IOException e) {
-            error("A error occurred! Can not copy folder " + endFile.getName() + " to " + dim2File.getName());
-            e.printStackTrace();
-            return false;
+            FileUtils.copyDirectory(endFile, dim2File)
+        } catch (e: IOException) {
+            error("A error occurred! Can not copy folder " + endFile.name + " to " + dim2File.name)
+            e.printStackTrace()
+            return false
         }
-        return true;
+        return true
     }
-
-    @Override
-    public boolean checkValid(File dropFolder) {
-        boolean valid = Arrays.asList(worldNames).equals(Arrays.stream(Objects.requireNonNull(dropFolder.listFiles())).map(File::getName).collect(Collectors.toList()));
-
-        if(!valid)
-            error("Please use " + Arrays.toString(worldNames), false);
-
-        return valid;
+    override fun checkValid(dropFolder: File): Boolean {
+        val valid = Arrays.asList(*worldNames) == Arrays.stream(Objects.requireNonNull(dropFolder.listFiles())).map { obj: File -> obj.name }.collect(Collectors.toList())
+        if (!valid) error("Please use " + Arrays.toString(worldNames), false)
+        return valid
     }
 }

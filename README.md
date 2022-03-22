@@ -2,7 +2,7 @@
 
 ---
 
-WorldMerger is a useful tool to merge minecraft multiplayer worlds to a singleplayer world
+this is useful tool to merge minecraft multiplayer worlds to a singleplayer world written in Kotlin
 
 # How to Run 
 

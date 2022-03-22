@@ -15,12 +15,9 @@ public class GuiNew extends Application {
     public void start(Stage stage) throws Exception {
         instance = this;
         System.setProperty("prism.lcdtext", "false");
-
         Parent root = FXMLLoader.load(getClass().getResource("/gui/main.fxml"));
-
         Scene scene = new Scene(root);
         scene.setRoot(root);
-
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("WorldMerger");
