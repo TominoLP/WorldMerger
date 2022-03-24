@@ -1,24 +1,19 @@
 package de.zeus.merger.controller
 
 import com.gluonhq.charm.glisten.control.TextField
-import de.zeus.merger.Utils.Companion.betterLaunch
-import javafx.fxml.Initializable
-import javafx.fxml.FXML
-import java.util.ResourceBundle
-import de.zeus.merger.controller.MainController
-import de.zeus.merger.WorldMerger
 import com.sun.javafx.PlatformUtil
 import de.zeus.merger.SearchGui
-import javafx.event.ActionEvent
+import de.zeus.merger.Utils.Companion.betterLaunch
+import de.zeus.merger.WorldMerger
 import javafx.event.EventHandler
+import javafx.fxml.FXML
+import javafx.fxml.Initializable
 import javafx.scene.control.Button
-import javax.swing.UIManager
-import java.lang.ClassNotFoundException
-import javax.swing.UnsupportedLookAndFeelException
-import java.lang.InstantiationException
-import java.lang.IllegalAccessException
 import java.net.URL
+import java.util.*
 import javax.swing.JFileChooser
+import javax.swing.UIManager
+import javax.swing.UnsupportedLookAndFeelException
 
 class MainController : Initializable {
     @FXML
@@ -35,12 +30,12 @@ class MainController : Initializable {
     override fun initialize(url: URL, resourceBundle: ResourceBundle) {
         instance = this
         textfieldPath!!.text = WorldMerger.savePath.absolutePath
-        startButton!!.onAction = EventHandler { e: ActionEvent? ->
+        startButton!!.onAction = EventHandler {
             WorldMerger.instance.start(
                 textfield!!.text, textfieldPath!!.text
             )
         }
-        openButton!!.onAction = EventHandler { e: ActionEvent? ->
+        openButton!!.onAction = EventHandler {
             if (PlatformUtil.isWindows()) {
                 betterLaunch(SearchGui::class.java)
             } else {

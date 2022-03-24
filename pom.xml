@@ -14,7 +14,6 @@
         <java.version>17</java.version>
         <kotlin.version>1.6.10</kotlin.version>
     </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -29,14 +28,6 @@
                         </goals>
                     </execution>
                 </executions>
-
-<!--                <configuration>-->
-<!--                    <transformers>-->
-<!--                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
-<!--                            <mainClass>de.zeus.merger.WorldMerger</mainClass>-->
-<!--                        </transformer>-->
-<!--                    </transformers>-->
-<!--                </configuration>-->
             </plugin>
             <plugin>
                 <groupId>io.ebean</groupId>
@@ -66,7 +57,6 @@
                     </tiles>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -75,7 +65,6 @@
                     <mainClass>de.zeus.merger.WorldMerger</mainClass>
                 </configuration>
             </plugin>
-
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -106,6 +95,13 @@
                         <phase>test-compile</phase>
                         <goals>
                             <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>js</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>js</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -152,32 +148,27 @@
             <url>http://nexus.gluonhq.com/nexus/content/repositories/releases/</url>
         </repository>
     </repositories>
-
     <dependencies>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.11.0</version>
         </dependency>
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>17.0.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>17.0.2</version>
         </dependency>
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
             <version>17.0.1</version>
         </dependency>
-
         <dependency>
             <groupId>com.gluonhq</groupId>
             <artifactId>charm-glisten</artifactId>
