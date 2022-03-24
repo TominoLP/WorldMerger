@@ -1,132 +1,110 @@
-package de.zeus.merger;
+package de.zeus.merger
 
-import de.zeus.merger.types.ServerToSingleplayerMerger;
-import de.zeus.merger.types.SingleplayerToServerMerger;
-import javax.swing.*;
-import java.io.File;
-import java.net.URISyntaxException;
+import de.zeus.merger.types.ServerToSingleplayerMerger
+import de.zeus.merger.types.SingleplayerToServerMerger
+import java.io.File
+import java.net.URISyntaxException
+import java.util.*
+import javax.swing.JOptionPane
 
-public class WorldMerger extends Utils {
+class WorldMerger(args: Array<String>?) : Utils() {
+    val dropFolder: File
+    var currentMerger: Merger? = null
 
-    private final File dropFolder;
-    private Merger currentMerger;
-
-    private static WorldMerger instance;
-    private static File jarFile;
-
-    public static void main(String[] args) {
-        System.out.println(
-                """
-                         █████╗  █████╗ ███████╗ █████╗ ███╗  ██╗ ██████╗██████╗ ██╗██████╗ ███████╗
-                        ██╔══██╗██╔══██╗██╔════╝██╔══██╗████╗ ██║██╔════╝██╔══██╗██║██╔══██╗██╔════╝
-                        ██║  ██║██║  ╚═╝█████╗  ███████║██╔██╗██║╚█████╗ ██████╔╝██║██████╔╝█████╗
-                        ██║  ██║██║  ██╗██╔══╝  ██╔══██║██║╚████║ ╚═══██╗██╔═══╝ ██║██╔══██╗██╔══╝
-                        ╚█████╔╝╚█████╔╝███████╗██║  ██║██║ ╚███║██████╔╝██║     ██║██║  ██║███████╗
-                         ╚════╝  ╚════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚══╝╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝"""
-        );
-
-        new WorldMerger(args);
+    init {
+        instance = this
+        dropFolder = File(jarPath.toString() + "/yourworldshere/")
+        dropFolder.mkdir()
+        Runtime.getRuntime().addShutdownHook(Thread { println("Shutting down...") })
+        betterLaunch(GuiNew::class.java)
+        //        Application.launch(GuiNew.class, args);
     }
 
-    public WorldMerger(String[] args) {
-        instance = this;
-
-        dropFolder = new File(getJarPath() + "/yourworldshere/");
-        dropFolder.mkdir();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println("Shutting down...")));
-
-        Utils.betterLaunch(GuiNew.class);
-//        Application.launch(GuiNew.class, args);
-    }
-
-    public void start(String worldName, String serverPath) {
-        if(!isNull(serverPath)) {
-            if (dropFolder.exists() && dropFolder.listFiles() != null && dropFolder.listFiles().length > 0) {
-                if (dropFolder.listFiles().length == 1) {
-                    setCurrentMerger(new SingleplayerToServerMerger());
+    fun start(worldName: String, serverPath: String?) {
+        if (!isNull(serverPath)) {
+            if (dropFolder.exists() && dropFolder.listFiles() != null && dropFolder.listFiles().size > 0) {
+                currentMerger = if (dropFolder.listFiles().size == 1) {
+                    SingleplayerToServerMerger()
                 } else {
-                    setCurrentMerger(new ServerToSingleplayerMerger());
+                    ServerToSingleplayerMerger()
                 }
-
-                File finalWorld = new File(getJarPath() + "/" + worldName);
-                if(currentMerger instanceof ServerToSingleplayerMerger) {
-                    File serverPathFile;
-
-                    if(isNull(serverPath) || !(serverPathFile = new File(serverPath)).exists()) {
-                        error("Please enter a correct .minecraft path!", false);
-                        return;
+                var finalWorld = File(jarPath.toString() + "/" + worldName)
+                if (currentMerger is ServerToSingleplayerMerger) {
+                    var serverPathFile: File
+                    if (isNull(serverPath) || !File(serverPath).also { serverPathFile = it }
+                            .exists()) {
+                        error("Please enter a correct .minecraft path!", false)
+                        return
                     }
-
-                    finalWorld = new File(serverPathFile + "/" + worldName);
+                    finalWorld = File("serverPathFile/$worldName")
                 }
-
                 if (currentMerger != null) {
-                    System.out.println("Using " + getCurrentMerger().getClass().getSimpleName() + " merging tool");
-
-                    if (currentMerger.checkValid(dropFolder)) {
-                        boolean done = currentMerger.mergeWorld(dropFolder, finalWorld, worldName);
+                    println("Using " + currentMerger!!.javaClass.simpleName + " merging tool")
+                    if (currentMerger!!.checkValid(dropFolder)) {
+                        val done = currentMerger!!.mergeWorld(dropFolder, finalWorld, worldName)
                         if (done) {
-                            int input = JOptionPane.showOptionDialog(null, "Done!", "ServerMerger", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+                            val input = JOptionPane.showOptionDialog(
+                                null,
+                                "Done!",
+                                "ServerMerger",
+                                JOptionPane.CLOSED_OPTION,
+                                JOptionPane.INFORMATION_MESSAGE,
+                                null,
+                                null,
+                                null
+                            )
                             if (input == JOptionPane.OK_OPTION) {
-                                System.exit(0);
+                                System.exit(0)
                             }
                         }
                     }
                 } else {
-                    error("Can not recognize the worlds", false);
+                    error("Can not recognize the worlds", false)
                 }
             } else {
-                error("Please copy the worlds in the " + dropFolder.getName() + " folder", false);
+                error("Please copy the worlds in the " + dropFolder.name + " folder", false)
             }
         } else {
-            error("Please enter a name for the world!", false);
+            error("Please enter a name for the world!", false)
         }
     }
 
-    public static File getJarPath() {
-        if(jarFile == null) {
-            try {
-                return (jarFile = new File(WorldMerger.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile());
-            } catch (URISyntaxException e) {
-                return new File(".");
+    companion object {
+        lateinit var instance: WorldMerger
+            private set
+        private var jarFile: File? = null
+        @JvmStatic
+        fun main(args: Array<String>) {
+            println(
+                /* !!! Hit visitElement for element type: class org.jetbrains.kotlin.nj2k.tree.JKErrorExpression !!! */
+            )
+            WorldMerger(args)
+        }
+
+        val jarPath: File?
+            get() = if (jarFile == null) {
+                try {
+                    File(WorldMerger::class.java.protectionDomain.codeSource.location.toURI()).parentFile.also {
+                        jarFile = it
+                    }
+                } catch (e: URISyntaxException) {
+                    File(".")
+                }
+            } else jarFile
+        val savePath: File
+            get() = File(minecraftPath.toString() + "/saves/")
+        val minecraftPath: File?
+            get() {
+                val os = System.getProperty("os.name").lowercase(Locale.getDefault())
+                var finalFile: File? = null
+                if (os.contains("windows")) {
+                    finalFile = File(System.getenv("APPDATA") + "/.minecraft/")
+                } else if (os.contains("mac")) {
+                    finalFile = File(System.getenv("user.home") + "Library/Application Support/minecraft")
+                } else if (os.contains("linux") || os.contains("unix")) {
+                    finalFile = File(System.getenv("user.home") + '.' + "minecraft" + '/')
+                }
+                return finalFile
             }
-        }
-        return jarFile;
-    }
-
-    public File getDropFolder() {
-        return dropFolder;
-    }
-
-    public Merger getCurrentMerger() {
-        return currentMerger;
-    }
-
-    public void setCurrentMerger(Merger currentMerger) {
-        this.currentMerger = currentMerger;
-    }
-
-    public static WorldMerger getInstance() {
-        return instance;
-    }
-
-    public static File getSavePath() {
-        return new File(getMinecraftPath() + "/saves/");
-    }
-
-    public static File getMinecraftPath() {
-        String os = System.getProperty("os.name").toLowerCase();
-        File finalFile = null;
-
-        if(os.contains("windows")) {
-            finalFile = new File(System.getenv("APPDATA") + "/.minecraft/");
-        } else if(os.contains("mac")) {
-            finalFile = new File(System.getenv("user.home") + "Library/Application Support/minecraft");
-        } else if(os.contains("linux") || os.contains("unix")) {
-            finalFile = new File(System.getenv("user.home") + '.' + "minecraft" + '/');
-        }
-
-        return finalFile;
     }
 }

@@ -15,6 +15,6 @@ class SearchGui : Application() {
             error("Please select an correct folder!", false)
             return
         }
-        MainController.getInstance().getTextfieldPath().text = file.absolutePath
+        WorldMerger.savePath.absolutePath
     }
 }
