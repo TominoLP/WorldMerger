@@ -2,7 +2,6 @@ package de.zeus.merger;
 
 import de.zeus.merger.types.ServerToSingleplayerMerger;
 import de.zeus.merger.types.SingleplayerToServerMerger;
-
 import javax.swing.*;
 import java.io.File;
 import java.net.URISyntaxException;

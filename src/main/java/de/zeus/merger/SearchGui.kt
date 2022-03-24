@@ -1,7 +1,6 @@
 package de.zeus.merger
 
 import de.zeus.merger.Utils.Companion.error
-import de.zeus.merger.WorldMerger.getInstance
 import de.zeus.merger.controller.MainController
 import javafx.application.Application
 import javafx.stage.DirectoryChooser

@@ -2,35 +2,33 @@ package de.zeus.merger.types
 
 import de.zeus.merger.Merger
 import de.zeus.merger.Utils
-import de.zeus.merger.Utils.Companion.error
-import java.io.File
 import org.apache.commons.io.FileUtils
+import java.io.File
 import java.io.IOException
-import java.util.Arrays
-import java.util.Objects
+import java.util.*
 import java.util.stream.Collectors
 
 class ServerToSingleplayerMerger : Utils(), Merger {
     private val worldNames = arrayOf("world", "world_nether", "world_the_end")
-    override fun mergeWorld(dropFolder: File?, finalWorld: File?, worldName: String?): Boolean {
-        if (finalWorld!!.exists()) {
+    override fun mergeWorld(from: File?, destination: File?, worldName: String?): Boolean {
+        if (destination!!.exists()) {
             error("A error occurred! Folder $worldName already exists", false)
             return false
         }
-        if (!finalWorld.mkdir()) {
+        if (!destination.mkdir()) {
             error("A error occurred! Can not creating folder $worldName")
             return false
         }
-        val worldFile = File(dropFolder.toString() + "/world/")
+        val worldFile = File(from.toString() + "/world/")
         try {
-            FileUtils.copyDirectory(worldFile, finalWorld)
+            FileUtils.copyDirectory(worldFile, destination)
         } catch (e: IOException) {
             error("A error occurred! Can not copy default world to $worldName")
             e.printStackTrace()
             return false
         }
-        val netherFile = File(dropFolder.toString() + "/world_nether/DIM-1/")
-        val dim1File = File("$finalWorld/DIM-1/")
+        val netherFile = File(from.toString() + "/world_nether/DIM-1/")
+        val dim1File = File("$destination/DIM-1/")
         try {
             if (dim1File.exists()) {
                 FileUtils.deleteDirectory(dim1File)
@@ -51,8 +49,8 @@ class ServerToSingleplayerMerger : Utils(), Merger {
             e.printStackTrace()
             return false
         }
-        val endFile = File(dropFolder.toString() + "/world_the_end/DIM1/")
-        val dim2File = File("$finalWorld/DIM1/")
+        val endFile = File(from.toString() + "/world_the_end/DIM1/")
+        val dim2File = File("$destination/DIM1/")
         try {
             if (dim2File.exists()) {
                 FileUtils.deleteDirectory(dim2File)
@@ -77,13 +75,13 @@ class ServerToSingleplayerMerger : Utils(), Merger {
         return true
     }
 
-    override fun checkValid(dropFolder: File?): Boolean {
-        val valid = Arrays.asList(*worldNames) == Arrays.stream(
+    override fun checkValid(from: File?): Boolean {
+        val valid = listOf(*worldNames) == Arrays.stream(
             Objects.requireNonNull(
-                dropFolder!!.listFiles()
+                from!!.listFiles()
             )
         ).map { obj: File -> obj.name }.collect(Collectors.toList())
-        if (!valid) error("Please use " + Arrays.toString(worldNames), false)
+        if (!valid) error("Please use " + worldNames.contentToString(), false)
         return valid
     }
 }

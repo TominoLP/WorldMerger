@@ -21,7 +21,6 @@ class GuiNew : Application() {
         stage.icons.add(Image(javaClass.getResourceAsStream("/gui/logo.png")))
         stage.show()
     }
-
     companion object {
         var instance: GuiNew? = null
             private set
