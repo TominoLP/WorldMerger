@@ -2,11 +2,10 @@ package de.zeus.merger.types
 
 import de.zeus.merger.Merger
 import de.zeus.merger.Utils
-import de.zeus.merger.Utils.Companion.error
-import java.io.File
-import java.util.Objects
 import org.apache.commons.io.FileUtils
+import java.io.File
 import java.io.IOException
+import java.util.*
 
 class SingleplayerToServerMerger : Utils(), Merger {
     override fun mergeWorld(from: File, destination: File, worldName: String): Boolean {

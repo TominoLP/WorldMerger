@@ -5,25 +5,19 @@ import de.zeus.merger.WorldMerger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-
 import javax.swing.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
-
     @FXML
     public Button startButton;
-
     @FXML
     public TextField textfield;
-
     @FXML
     public TextField textfieldPath;
-
     @FXML
     public Button openButton;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.textfieldPath.setText(WorldMerger.getSavePath().getAbsolutePath());

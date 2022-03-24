@@ -1,31 +1,29 @@
-package de.zeus.merger;
+package de.zeus.merger
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
+import javafx.application.Application
+import javafx.fxml.FXMLLoader
+import javafx.scene.Parent
+import javafx.scene.Scene
+import javafx.scene.image.Image
+import javafx.stage.Stage
 
-public class GuiNew extends Application {
-
-    private static GuiNew instance;
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        instance = this;
-        System.setProperty("prism.lcdtext", "false");
-        Parent root = FXMLLoader.load(getClass().getResource("/gui/main.fxml"));
-        Scene scene = new Scene(root);
-        scene.setRoot(root);
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.setTitle("WorldMerger");
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/gui/logo.png")));
-        stage.show();
+class GuiNew : Application() {
+    @Throws(Exception::class)
+    override fun start(stage: Stage) {
+        instance = this
+        System.setProperty("prism.lcdtext", "false")
+        val root = FXMLLoader.load<Parent>(javaClass.getResource("/gui/main.fxml"))
+        val scene = Scene(root)
+        scene.root = root
+        stage.scene = scene
+        stage.isResizable = false
+        stage.title = "WorldMerger"
+        stage.icons.add(Image(javaClass.getResourceAsStream("/gui/logo.png")))
+        stage.show()
     }
 
-    public static GuiNew getInstance() {
-        return instance;
+    companion object {
+        var instance: GuiNew? = null
+            private set
     }
 }

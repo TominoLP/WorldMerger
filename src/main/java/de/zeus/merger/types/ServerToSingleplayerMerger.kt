@@ -2,12 +2,10 @@ package de.zeus.merger.types
 
 import de.zeus.merger.Merger
 import de.zeus.merger.Utils
-import de.zeus.merger.Utils.Companion.error
-import java.io.File
 import org.apache.commons.io.FileUtils
+import java.io.File
 import java.io.IOException
-import java.util.Arrays
-import java.util.Objects
+import java.util.*
 import java.util.stream.Collectors
 
 class ServerToSingleplayerMerger : Utils(), Merger {
