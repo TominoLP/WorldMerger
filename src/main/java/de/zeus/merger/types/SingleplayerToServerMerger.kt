@@ -8,8 +8,8 @@ import java.io.IOException
 import java.util.*
 
 class SingleplayerToServerMerger : Utils(), Merger {
-    override fun mergeWorld(from: File, destination: File, worldName: String): Boolean {
-        if (destination.exists()) {
+    override fun mergeWorld(from: File?, destination: File?, worldName: String?): Boolean {
+        if (destination!!.exists()) {
             error("A error occurred! Folder $worldName already exists", false)
             return false
         }
@@ -18,7 +18,7 @@ class SingleplayerToServerMerger : Utils(), Merger {
             return false
         }
         val defaultWorld = File("$destination/world/")
-        val worldFile = File(from.toString() + "/" + Objects.requireNonNull(from.listFiles())[0].name)
+        val worldFile = File(from.toString() + "/" + Objects.requireNonNull(from!!.listFiles())[0].name)
         if (!defaultWorld.mkdir()) {
             error("A error occurred! Can not create folder " + defaultWorld.name)
             return false
@@ -72,8 +72,9 @@ class SingleplayerToServerMerger : Utils(), Merger {
         }
         return true
     }
-    override fun checkValid(from: File): Boolean {
-        val valid = Objects.requireNonNull(from.listFiles()).size == 1
+
+    override fun checkValid(from: File?): Boolean {
+        val valid = Objects.requireNonNull(from!!.listFiles()).size == 1
         if (!valid) error("Please put a singleplayer world in the " + from.name + " folder!", false)
         return valid
     }

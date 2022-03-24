@@ -2,7 +2,7 @@ package de.zeus.merger;
 
 import de.zeus.merger.types.ServerToSingleplayerMerger;
 import de.zeus.merger.types.SingleplayerToServerMerger;
-import javafx.application.Application;
+
 import javax.swing.*;
 import java.io.File;
 import java.net.URISyntaxException;
@@ -37,11 +37,12 @@ public class WorldMerger extends Utils {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println("Shutting down...")));
 
-        Application.launch(GuiNew.class, args);
+        Utils.betterLaunch(GuiNew.class);
+//        Application.launch(GuiNew.class, args);
     }
 
     public void start(String worldName, String serverPath) {
-        if(isNull(serverPath)) {
+        if(!isNull(serverPath)) {
             if (dropFolder.exists() && dropFolder.listFiles() != null && dropFolder.listFiles().length > 0) {
                 if (dropFolder.listFiles().length == 1) {
                     setCurrentMerger(new SingleplayerToServerMerger());
